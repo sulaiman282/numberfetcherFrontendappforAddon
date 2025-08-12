@@ -60,6 +60,7 @@ export default function HomePage() {
   const [copied, setCopied] = useState<string | null>(null)
   const [timerInterval, setTimerInterval] = useState(2)
   const [activeTab, setActiveTab] = useState<'favorites' | 'special'>('favorites')
+  const [activeProfile, setActiveProfile] = useState<any>(null)
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -72,12 +73,13 @@ export default function HomePage() {
     if (!isAuthenticated) return
     
     try {
-      const [favs, recents, special, balanceData, testData] = await Promise.all([
+      const [favs, recents, special, balanceData, testData, activeProfileData] = await Promise.all([
         adminAPI.getRanges('favorites'),
         adminAPI.getRanges('recents'),
         adminAPI.getRanges('special'),
         adminAPI.getBalance(),
-        adminAPI.getTestNumbers()
+        adminAPI.getTestNumbers(),
+        adminAPI.getActiveProfile().catch(() => null) // Don't fail if no active profile
       ])
       
       setRanges({
@@ -93,6 +95,8 @@ export default function HomePage() {
       if (testData.success) {
         setTestNumbers(testData.working_numbers?.slice(0, 10) || [])
       }
+      
+      setActiveProfile(activeProfileData)
     } catch (error) {
       console.error('Failed to fetch data')
     }
@@ -211,6 +215,17 @@ export default function HomePage() {
               {/* Status Indicators */}
               <div className="flex items-center space-x-2">
                 <span className="status-running text-xs">● Server Running</span>
+                
+                {activeProfile && (
+                  <span className={`text-xs px-2 py-1 rounded ${
+                    activeProfile.is_logged_in 
+                      ? 'bg-green-600 text-white' 
+                      : 'bg-yellow-600 text-white'
+                  }`}>
+                    Profile: {activeProfile.name} {activeProfile.is_logged_in ? '✓' : '⚠'}
+                  </span>
+                )}
+                
                 {balance && (
                   <>
                     <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">

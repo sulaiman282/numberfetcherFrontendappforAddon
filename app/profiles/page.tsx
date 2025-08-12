@@ -70,11 +70,17 @@ export default function ProfilesPage() {
     }
 
     try {
-      await adminAPI.createProfile(newProfile)
+      const result = await adminAPI.createProfile(newProfile)
       setNewProfile({ name: '', auth_token: '' })
       setShowAddForm(false)
       await fetchProfiles()
-      toast.success('Profile created successfully')
+      
+      // Show appropriate toast based on login result
+      if (result.login_result?.success) {
+        toast.success(`Profile created and logged in successfully!`)
+      } else {
+        toast.success(`Profile created but login failed: ${result.login_result?.message || 'Unknown error'}`)
+      }
     } catch (error) {
       toast.error('Failed to create profile')
     }
@@ -84,13 +90,21 @@ export default function ProfilesPage() {
     if (!editingProfile) return
 
     try {
-      await adminAPI.updateProfile(editingProfile.id, {
+      const result = await adminAPI.updateProfile(editingProfile.id, {
         name: editingProfile.name,
         auth_token: editingProfile.auth_token
       })
       setEditingProfile(null)
       await fetchProfiles()
-      toast.success('Profile updated successfully')
+      
+      // Show appropriate toast based on login result
+      if (result.login_result?.success) {
+        toast.success(`Profile updated and logged in successfully!`)
+      } else if (result.login_result) {
+        toast.success(`Profile updated but login failed: ${result.login_result.message}`)
+      } else {
+        toast.success('Profile updated successfully')
+      }
     } catch (error) {
       toast.error('Failed to update profile')
     }
@@ -320,21 +334,23 @@ export default function ProfilesPage() {
                 </div>
               </div>
 
-              {/* Login Status */}
+              {/* Login Status - Only show if failed or ready */}
               <div className="mb-4 flex items-center space-x-2">
-                <span className={`text-xs px-2 py-1 rounded-full ${
-                  profile.login_status === 'success' 
-                    ? 'bg-green-600 text-white' 
-                    : profile.login_status === 'failed'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-600 text-white'
-                }`}>
-                  {profile.login_status.replace('_', ' ')}
-                </span>
+                {profile.login_status === 'failed' && (
+                  <span className="text-xs px-2 py-1 rounded-full bg-red-600 text-white">
+                    Login failed
+                  </span>
+                )}
                 
                 {profile.is_active && profile.is_logged_in && (
-                  <span className="text-xs px-2 py-1 rounded-full bg-blue-600 text-white">
-                    Ready to use
+                  <span className="text-xs px-2 py-1 rounded-full bg-green-600 text-white">
+                    ✓ Ready to use
+                  </span>
+                )}
+                
+                {!profile.is_logged_in && profile.login_status !== 'failed' && (
+                  <span className="text-xs px-2 py-1 rounded-full bg-gray-600 text-white">
+                    Not logged in
                   </span>
                 )}
               </div>
