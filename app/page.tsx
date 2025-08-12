@@ -18,7 +18,8 @@ import {
   RefreshCw,
   Activity,
   DollarSign,
-  TrendingUp
+  TrendingUp,
+  Hash
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { adminAPI, publicAPI } from '@/lib/api'
@@ -295,6 +296,14 @@ export default function HomePage() {
               >
                 <Sparkles className="w-4 h-4" />
                 <span>★ Special</span>
+              </button>
+              
+              <button
+                onClick={applyRange}
+                className="btn-primary bg-orange-600 hover:bg-orange-700 flex items-center space-x-2"
+              >
+                <Hash className="w-4 h-4" />
+                <span>Get Number</span>
               </button>
             </div>
           </div>
