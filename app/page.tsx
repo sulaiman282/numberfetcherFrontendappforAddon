@@ -224,6 +224,14 @@ export default function HomePage() {
               </div>
               
               <button
+                onClick={() => router.push('/profiles')}
+                className="btn-secondary flex items-center space-x-2 text-sm mr-2"
+              >
+                <CheckCircle className="w-4 h-4" />
+                <span>Profiles</span>
+              </button>
+              
+              <button
                 onClick={logout}
                 className="btn-danger flex items-center space-x-2 text-sm"
               >

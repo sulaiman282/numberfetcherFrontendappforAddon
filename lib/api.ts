@@ -134,6 +134,42 @@ export const adminAPI = {
     })
     return response.data
   },
+
+  // Profile Management
+  getProfiles: async () => {
+    const response = await api.get('/api/admin/profiles')
+    return response.data
+  },
+
+  createProfile: async (data: { name: string; auth_token: string }) => {
+    const response = await api.post('/api/admin/profiles', data)
+    return response.data
+  },
+
+  updateProfile: async (id: number, data: { name?: string; auth_token?: string }) => {
+    const response = await api.put(`/api/admin/profiles/${id}`, data)
+    return response.data
+  },
+
+  deleteProfile: async (id: number) => {
+    const response = await api.delete(`/api/admin/profiles/${id}`)
+    return response.data
+  },
+
+  activateProfile: async (id: number) => {
+    const response = await api.post(`/api/admin/profiles/${id}/activate`)
+    return response.data
+  },
+
+  loginProfile: async (id: number) => {
+    const response = await api.post(`/api/admin/profiles/${id}/login`)
+    return response.data
+  },
+
+  getActiveProfile: async () => {
+    const response = await api.get('/api/admin/profiles/active')
+    return response.data
+  },
 }
 
 export default api
