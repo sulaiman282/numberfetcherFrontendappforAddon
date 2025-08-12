@@ -31,7 +31,7 @@ interface NumberRange {
   category: string
   created_at: string
   updated_at: string
-  extra_data?: any
+  metadata?: any
 }
 
 interface BalanceData {
@@ -128,7 +128,7 @@ export default function HomePage() {
       await adminAPI.createRange({
         range_value: currentRange.trim(),
         category: category,
-        extra_data: { timestamp: new Date().toISOString() }
+        metadata: { timestamp: new Date().toISOString() }
       })
       
       setCurrentRange('')

@@ -284,16 +284,24 @@ export default function ProfilesPage() {
                 <div className="flex items-center space-x-2">
                   {/* Login Status */}
                   {profile.is_logged_in ? (
-                    <CheckCircle className="w-5 h-5 text-green-500" title="Logged in" />
+                    <div title="Logged in">
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    </div>
                   ) : (
-                    <XCircle className="w-5 h-5 text-red-500" title="Not logged in" />
+                    <div title="Not logged in">
+                      <XCircle className="w-5 h-5 text-red-500" />
+                    </div>
                   )}
                   
                   {/* Active Status */}
                   {profile.is_active ? (
-                    <Power className="w-5 h-5 text-primary-500" title="Active profile" />
+                    <div title="Active profile">
+                      <Power className="w-5 h-5 text-primary-500" />
+                    </div>
                   ) : (
-                    <PowerOff className="w-5 h-5 text-gray-500" title="Inactive profile" />
+                    <div title="Inactive profile">
+                      <PowerOff className="w-5 h-5 text-gray-500" />
+                    </div>
                   )}
                 </div>
               </div>
